@@ -203,11 +203,56 @@
       font-size: 14px;
     }
 
+    .photo-area {
+      text-align: center;
+    }
+
+    .photo-preview {
+      width: 180px;
+      height: 180px;
+      margin: 10px auto 20px;
+      border: 2px dashed #cbb5e8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #faf7ff;
+      color: #999;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-input {
+      display: none;
+    }
+
+    .photo-button {
+      display: inline-block;
+      padding: 13px 20px;
+      border-radius: 13px;
+      background: #eee3ff;
+      color: #7534c5;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     .error {
       min-height: 20px;
       margin-top: 12px;
       color: #d33b4b;
       font-size: 14px;
+    }
+
+    .success {
+      margin-top: 15px;
+      color: #268a4b;
+      font-size: 14px;
+      text-align: center;
     }
 
     .continue-button {
@@ -249,7 +294,7 @@
       O‘zingizga mos insonni toping va yangi tanishuvlarni boshlang.
     </p>
 
-    <!-- 1-bosqich: asosiy ma'lumotlar -->
+    <!-- 1-bosqich -->
     <section id="basic-screen" class="form-card">
       <h2>Ma’lumotlaringiz</h2>
       <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
@@ -274,17 +319,11 @@
       <label>Jins</label>
 
       <div class="gender-buttons">
-        <button
-          class="gender-button"
-          onclick="selectGender('Erkak', this)"
-        >
+        <button class="gender-button" onclick="selectGender('Erkak', this)">
           Erkak
         </button>
 
-        <button
-          class="gender-button"
-          onclick="selectGender('Ayol', this)"
-        >
+        <button class="gender-button" onclick="selectGender('Ayol', this)">
           Ayol
         </button>
       </div>
@@ -299,7 +338,7 @@
       <div id="basic-error" class="error"></div>
     </section>
 
-    <!-- 2-bosqich: bio -->
+    <!-- 2-bosqich -->
     <section id="bio-screen" class="form-card hidden">
       <h2>O‘zingiz haqingizda</h2>
       <p>Qisqacha o‘zingiz haqingizda yozing</p>
@@ -320,7 +359,7 @@
       <div id="bio-error" class="error"></div>
     </section>
 
-    <!-- 3-bosqich: qiziqishlar -->
+    <!-- 3-bosqich -->
     <section id="interests-screen" class="form-card hidden">
       <h2>Qiziqishlar</h2>
       <p>Hobbilaringiz va afzalliklaringizni tanlang</p>
@@ -439,6 +478,34 @@
       <div id="interests-error" class="error"></div>
     </section>
 
+    <!-- 4-bosqich -->
+    <section id="photo-screen" class="form-card hidden">
+      <h2>Profil rasmingiz</h2>
+      <p>O‘zingizning rasmingizni yuklang</p>
+
+      <div class="photo-area">
+        <div id="photo-preview" class="photo-preview">
+          Rasm tanlanmagan
+        </div>
+
+        <label for="photo-input" class="photo-button">
+          Rasm tanlash
+        </label>
+
+        <input
+          id="photo-input"
+          class="photo-input"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onchange="previewPhoto(event)"
+        />
+
+        <div id="photo-success" class="success"></div>
+      </div>
+
+      <div id="photo-error" class="error"></div>
+    </section>
+
     <button
       id="continue-button"
       class="continue-button"
@@ -453,6 +520,7 @@
     let selectedGender = "";
     let selectedInterests = [];
     let selectedLookingFor = "";
+    let selectedPhoto = "";
 
     function selectGender(gender, button) {
       selectedGender = gender;
@@ -495,12 +563,52 @@
       button.classList.add("selected");
     }
 
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      const error = document.getElementById("photo-error");
+      const success = document.getElementById("photo-success");
+
+      error.textContent = "";
+      success.textContent = "";
+
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        error.textContent = "Faqat rasm faylini tanlang.";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        error.textContent = "Rasm hajmi 5 MB dan oshmasligi kerak.";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(loadEvent) {
+        selectedPhoto = loadEvent.target.result;
+
+        document.getElementById("photo-preview").innerHTML =
+          "<img src='" + selectedPhoto + "' alt='Profil rasmi' />";
+
+        success.textContent = "Rasm tanlandi.";
+      };
+
+      reader.readAsDataURL(file);
+    }
+
     function showScreen(screenName) {
       document.getElementById("basic-screen").classList.add("hidden");
       document.getElementById("bio-screen").classList.add("hidden");
       document.getElementById("interests-screen").classList.add("hidden");
+      document.getElementById("photo-screen").classList.add("hidden");
 
-      document.getElementById(screenName + "-screen").classList.remove("hidden");
+      document
+        .getElementById(screenName + "-screen")
+        .classList.remove("hidden");
+
       currentScreen = screenName;
     }
 
@@ -589,8 +697,24 @@
 
         localStorage.setItem("lookingFor", selectedLookingFor);
 
+        showScreen("photo");
+        return;
+      }
+
+      if (currentScreen === "photo") {
+        const error = document.getElementById("photo-error");
+
+        error.textContent = "";
+
+        if (!selectedPhoto) {
+          error.textContent = "Davom etish uchun profil rasmini tanlang.";
+          return;
+        }
+
+        localStorage.setItem("profilePhoto", selectedPhoto);
+
         alert(
-          "Ajoyib! Profil ma’lumotlaringiz, bio va qiziqishlaringiz saqlandi."
+          "Tabriklaymiz! Profilingiz muvaffaqiyatli yaratildi."
         );
       }
     }
