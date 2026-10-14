@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tanishuv Mini App</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f7f4ff;
+      color: #202020;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .language {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 40px;
+    }
+
+    .language button {
+      border: none;
+      background: transparent;
+      color: #8d4de8;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logo {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      color: white;
+      font-size: 36px;
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      margin: 12px 0 34px;
+      text-align: center;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 22px;
+      background: white;
+      box-shadow: 0 8px 24px rgba(90, 60, 130, 0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .card p {
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .start-button {
+      width: 100%;
+      margin-top: auto;
+      padding: 17px;
+      border: none;
+      border-radius: 16px;
+      background: #934de8;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .start-button:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <div class="language">
+      <button>UZ</button>
+      <button>RU</button>
+      <button>EN</button>
+    </div>
+
+    <div class="logo">❤</div>
+
+    <h1>Tanishuv Olami</h1>
+
+    <p class="subtitle">
+      Yangi insonlar bilan tanishing va o‘zingizga mos insonni toping.
+    </p>
+
+    <section class="card">
+      <h2>Xush kelibsiz!</h2>
+      <p>
+        Profil yarating, qiziqishlaringizni tanlang va sizga mos insonlar
+        bilan tanishing.
+      </p>
+    </section>
+
+    <button class="start-button" onclick="startApp()">
+      Boshlash
+    </button>
+  </main>
+
+  <script>
+    function startApp() {
+      alert("Ro‘yxatdan o‘tish sahifasi keyingi bosqichda qo‘shiladi.");
+    }
+  </script>
+</body>
+</html>
