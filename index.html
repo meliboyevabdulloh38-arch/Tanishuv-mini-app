@@ -40,6 +40,7 @@
       color: #8e4de8;
       font-size: 14px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     .languages .active {
@@ -90,6 +91,7 @@
     .form-card p {
       margin: 0 0 22px;
       color: #777;
+      line-height: 1.5;
     }
 
     label {
@@ -98,7 +100,8 @@
       font-weight: bold;
     }
 
-    input {
+    input[type="text"],
+    input[type="number"] {
       width: 100%;
       padding: 14px;
       border: 1px solid #ddd;
@@ -107,7 +110,8 @@
       outline: none;
     }
 
-    input:focus {
+    input:focus,
+    textarea:focus {
       border-color: #934de8;
     }
 
@@ -149,6 +153,25 @@
       margin-top: 1px;
     }
 
+    textarea {
+      width: 100%;
+      min-height: 150px;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .counter {
+      margin-top: 6px;
+      text-align: right;
+      color: #777;
+      font-size: 13px;
+    }
+
     .error {
       min-height: 20px;
       margin-top: 12px;
@@ -172,6 +195,10 @@
     .continue-button:active {
       transform: scale(0.98);
     }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -191,12 +218,13 @@
       O‘zingizga mos insonni toping va yangi tanishuvlarni boshlang.
     </p>
 
-    <section class="form-card">
+    <section id="basic-screen" class="form-card">
       <h2>Ma’lumotlaringiz</h2>
 
       <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
 
       <label for="name">Ism</label>
+
       <input
         id="name"
         type="text"
@@ -205,6 +233,7 @@
       />
 
       <label for="age">Yosh</label>
+
       <input
         id="age"
         type="number"
@@ -216,17 +245,24 @@
       <label>Jins</label>
 
       <div class="gender-buttons">
-        <button class="gender-button" onclick="selectGender('Erkak', this)">
+        <button
+          class="gender-button"
+          onclick="selectGender('Erkak', this)"
+        >
           Erkak
         </button>
 
-        <button class="gender-button" onclick="selectGender('Ayol', this)">
+        <button
+          class="gender-button"
+          onclick="selectGender('Ayol', this)"
+        >
           Ayol
         </button>
       </div>
 
       <label class="consent">
         <input id="consent" type="checkbox" />
+
         <span>
           Men ommaviy oferta shartlarini o‘qib chiqdim va roziman.
         </span>
@@ -235,65 +271,125 @@
       <div id="error" class="error"></div>
     </section>
 
-    <button class="continue-button" onclick="continueRegistration()">
+    <section id="bio-screen" class="form-card hidden">
+      <h2>O‘zingiz haqingizda</h2>
+
+      <p>Qisqacha o‘zingiz haqingizda yozing</p>
+
+      <label for="bio">Bio</label>
+
+      <textarea
+        id="bio"
+        maxlength="500"
+        placeholder="Salom, men..."
+        oninput="updateCounter()"
+      ></textarea>
+
+      <div class="counter">
+        <span id="bio-counter">0</span>/500
+      </div>
+
+      <div id="bio-error" class="error"></div>
+    </section>
+
+    <button
+      id="continue-button"
+      class="continue-button"
+      onclick="continueRegistration()"
+    >
       Davom etish
     </button>
   </main>
 
   <script>
     let selectedGender = "";
+    let currentScreen = "basic";
 
     function selectGender(gender, button) {
       selectedGender = gender;
 
-      document.querySelectorAll(".gender-button").forEach((item) => {
+      document.querySelectorAll(".gender-button").forEach(function (item) {
         item.classList.remove("selected");
       });
 
       button.classList.add("selected");
     }
 
+    function updateCounter() {
+      const bio = document.getElementById("bio").value;
+
+      document.getElementById("bio-counter").textContent = bio.length;
+    }
+
     function continueRegistration() {
-      const name = document.getElementById("name").value.trim();
-      const age = Number(document.getElementById("age").value);
-      const consent = document.getElementById("consent").checked;
       const error = document.getElementById("error");
+      const bioError = document.getElementById("bio-error");
 
-      error.textContent = "";
+      if (currentScreen === "basic") {
+        const name = document.getElementById("name").value.trim();
+        const age = Number(document.getElementById("age").value);
+        const consent = document.getElementById("consent").checked;
 
-      if (!name) {
-        error.textContent = "Ismingizni kiriting.";
-        return;
+        error.textContent = "";
+
+        if (!name) {
+          error.textContent = "Ismingizni kiriting.";
+          return;
+        }
+
+        if (!age || age < 18) {
+          error.textContent =
+            "Ilovadan foydalanish uchun kamida 18 yoshda bo‘lishingiz kerak.";
+          return;
+        }
+
+        if (!selectedGender) {
+          error.textContent = "Jinsingizni tanlang.";
+          return;
+        }
+
+        if (!consent) {
+          error.textContent =
+            "Davom etish uchun oferta shartlariga rozilik bering.";
+          return;
+        }
+
+        localStorage.setItem(
+          "userBasicInfo",
+          JSON.stringify({
+            name: name,
+            age: age,
+            gender: selectedGender,
+            offerAccepted: true
+          })
+        );
+
+        document
+          .getElementById("basic-screen")
+          .classList.add("hidden");
+
+        document
+          .getElementById("bio-screen")
+          .classList.remove("hidden");
+
+        currentScreen = "bio";
+      } else {
+        const bio = document.getElementById("bio").value.trim();
+
+        bioError.textContent = "";
+
+        if (bio.length < 20) {
+          bioError.textContent =
+            "O‘zingiz haqingizda kamida 20 ta belgi yozing.";
+          return;
+        }
+
+        localStorage.setItem("userBio", bio);
+
+        alert(
+          "Ajoyib! Ma’lumotlaringiz va bio saqlandi."
+        );
       }
-
-      if (!age || age < 18) {
-        error.textContent =
-          "Ilovadan foydalanish uchun kamida 18 yoshda bo‘lishingiz kerak.";
-        return;
-      }
-
-      if (!selectedGender) {
-        error.textContent = "Jinsingizni tanlang.";
-        return;
-      }
-
-      if (!consent) {
-        error.textContent =
-          "Davom etish uchun oferta shartlariga rozilik bering.";
-        return;
-      }
-
-      localStorage.setItem(
-        "userBasicInfo",
-        JSON.stringify({
-          name: name,
-          age: age,
-          gender: selectedGender,
-          offerAccepted: true
-        })
-      );
-
-      alert("Ma’lumotlar saqlandi. Keyingi bosqichda bio sahifasi qo‘shiladi.");
     }
   </script>
 </body>
