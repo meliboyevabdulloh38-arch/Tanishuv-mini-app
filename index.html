@@ -21,7 +21,7 @@
     .app {
       max-width: 480px;
       min-height: 100vh;
-      margin: 0 auto;
+      margin: auto;
       padding: 24px 20px;
       display: flex;
       flex-direction: column;
@@ -30,47 +30,45 @@
     .languages {
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
-      margin-bottom: 45px;
+      gap: 8px;
+      margin-bottom: 35px;
     }
 
     .languages button {
-      border: none;
+      border: 0;
       background: transparent;
       color: #8e4de8;
-      font-size: 14px;
       font-weight: bold;
-      cursor: pointer;
+      padding: 7px 10px;
+      border-radius: 9px;
     }
 
     .languages .active {
-      background: #8e4de8;
       color: white;
-      padding: 7px 11px;
-      border-radius: 10px;
+      background: #8e4de8;
     }
 
     .logo {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 22px;
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #a855f7, #ec4899);
       color: white;
-      font-size: 34px;
+      font-size: 32px;
     }
 
     h1 {
       margin: 0;
       text-align: center;
-      font-size: 28px;
+      font-size: 27px;
     }
 
     .subtitle {
-      margin: 12px 0 30px;
+      margin: 10px 0 26px;
       text-align: center;
       color: #777;
       line-height: 1.5;
@@ -89,7 +87,7 @@
     }
 
     .form-card p {
-      margin: 0 0 22px;
+      margin: 0 0 20px;
       color: #777;
       line-height: 1.5;
     }
@@ -110,49 +108,6 @@
       outline: none;
     }
 
-    input:focus,
-    textarea:focus {
-      border-color: #934de8;
-    }
-
-    .gender-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .gender-button {
-      flex: 1;
-      padding: 13px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      background: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .gender-button.selected {
-      border-color: #934de8;
-      background: #eee3ff;
-      color: #7534c5;
-      font-weight: bold;
-    }
-
-    .consent {
-      display: flex;
-      gap: 9px;
-      align-items: flex-start;
-      margin-top: 22px;
-      color: #666;
-      font-size: 14px;
-      line-height: 1.4;
-    }
-
-    .consent input {
-      width: 18px;
-      height: 18px;
-      margin-top: 1px;
-    }
-
     textarea {
       width: 100%;
       min-height: 150px;
@@ -165,11 +120,87 @@
       outline: none;
     }
 
+    input:focus,
+    textarea:focus {
+      border-color: #934de8;
+    }
+
+    .gender-buttons,
+    .looking-buttons {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .gender-button,
+    .looking-button {
+      flex: 1;
+      min-width: 30%;
+      padding: 13px 8px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .gender-button.selected,
+    .looking-button.selected {
+      border-color: #934de8;
+      background: #eee3ff;
+      color: #7534c5;
+      font-weight: bold;
+    }
+
+    .consent {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .consent input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+    }
+
     .counter {
       margin-top: 6px;
       text-align: right;
       color: #777;
       font-size: 13px;
+    }
+
+    .interests {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .interest {
+      padding: 11px 13px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: white;
+      color: #444;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .interest.selected {
+      border-color: #934de8;
+      background: #934de8;
+      color: white;
+    }
+
+    .selected-count {
+      margin: 12px 0;
+      color: #777;
+      font-size: 14px;
     }
 
     .error {
@@ -181,7 +212,7 @@
 
     .continue-button {
       width: 100%;
-      margin-top: auto;
+      margin-top: 24px;
       padding: 17px;
       border: none;
       border-radius: 16px;
@@ -218,28 +249,26 @@
       O‘zingizga mos insonni toping va yangi tanishuvlarni boshlang.
     </p>
 
+    <!-- 1-bosqich: asosiy ma'lumotlar -->
     <section id="basic-screen" class="form-card">
       <h2>Ma’lumotlaringiz</h2>
-
       <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
 
       <label for="name">Ism</label>
-
       <input
         id="name"
         type="text"
-        placeholder="Ismingizni kiriting"
         maxlength="40"
+        placeholder="Ismingizni kiriting"
       />
 
       <label for="age">Yosh</label>
-
       <input
         id="age"
         type="number"
-        placeholder="Yoshingizni kiriting"
         min="18"
         max="100"
+        placeholder="Yoshingizni kiriting"
       />
 
       <label>Jins</label>
@@ -262,18 +291,17 @@
 
       <label class="consent">
         <input id="consent" type="checkbox" />
-
         <span>
           Men ommaviy oferta shartlarini o‘qib chiqdim va roziman.
         </span>
       </label>
 
-      <div id="error" class="error"></div>
+      <div id="basic-error" class="error"></div>
     </section>
 
+    <!-- 2-bosqich: bio -->
     <section id="bio-screen" class="form-card hidden">
       <h2>O‘zingiz haqingizda</h2>
-
       <p>Qisqacha o‘zingiz haqingizda yozing</p>
 
       <label for="bio">Bio</label>
@@ -292,6 +320,125 @@
       <div id="bio-error" class="error"></div>
     </section>
 
+    <!-- 3-bosqich: qiziqishlar -->
+    <section id="interests-screen" class="form-card hidden">
+      <h2>Qiziqishlar</h2>
+      <p>Hobbilaringiz va afzalliklaringizni tanlang</p>
+
+      <div class="interests">
+        <button class="interest" onclick="toggleInterest(this, 'Musiqa')">
+          Musiqa
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Sayohat')">
+          Sayohat
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Oshpazlik')">
+          Oshpazlik
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Fotografiya')">
+          Fotografiya
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Fitness')">
+          Fitness
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Tabiat')">
+          Tabiat
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Shaxmat')">
+          Shaxmat
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Kofe')">
+          Kofe
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Kitob o‘qish')">
+          Kitob o‘qish
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Raqs')">
+          Raqs
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Kino')">
+          Kino
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'San’at')">
+          San’at
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Dasturlash')">
+          Dasturlash
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Suzish')">
+          Suzish
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Hayvonlar')">
+          Hayvonlar
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Sport')">
+          Sport
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'O‘yinlar')">
+          O‘yinlar
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Yoga')">
+          Yoga
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Futbol')">
+          Futbol
+        </button>
+
+        <button class="interest" onclick="toggleInterest(this, 'Velosiped')">
+          Velosiped
+        </button>
+      </div>
+
+      <div class="selected-count">
+        Tanlangan: <span id="interest-count">0</span>
+      </div>
+
+      <label>Kimni qidiryapsiz?</label>
+
+      <div class="looking-buttons">
+        <button
+          class="looking-button"
+          onclick="selectLookingFor('Erkak', this)"
+        >
+          Erkak
+        </button>
+
+        <button
+          class="looking-button"
+          onclick="selectLookingFor('Ayol', this)"
+        >
+          Ayol
+        </button>
+
+        <button
+          class="looking-button"
+          onclick="selectLookingFor('Farqi yo‘q', this)"
+        >
+          Farqi yo‘q
+        </button>
+      </div>
+
+      <div id="interests-error" class="error"></div>
+    </section>
+
     <button
       id="continue-button"
       class="continue-button"
@@ -302,13 +449,15 @@
   </main>
 
   <script>
-    let selectedGender = "";
     let currentScreen = "basic";
+    let selectedGender = "";
+    let selectedInterests = [];
+    let selectedLookingFor = "";
 
     function selectGender(gender, button) {
       selectedGender = gender;
 
-      document.querySelectorAll(".gender-button").forEach(function (item) {
+      document.querySelectorAll(".gender-button").forEach(function(item) {
         item.classList.remove("selected");
       });
 
@@ -317,18 +466,50 @@
 
     function updateCounter() {
       const bio = document.getElementById("bio").value;
-
       document.getElementById("bio-counter").textContent = bio.length;
     }
 
-    function continueRegistration() {
-      const error = document.getElementById("error");
-      const bioError = document.getElementById("bio-error");
+    function toggleInterest(button, interest) {
+      if (selectedInterests.includes(interest)) {
+        selectedInterests = selectedInterests.filter(function(item) {
+          return item !== interest;
+        });
 
+        button.classList.remove("selected");
+      } else {
+        selectedInterests.push(interest);
+        button.classList.add("selected");
+      }
+
+      document.getElementById("interest-count").textContent =
+        selectedInterests.length;
+    }
+
+    function selectLookingFor(value, button) {
+      selectedLookingFor = value;
+
+      document.querySelectorAll(".looking-button").forEach(function(item) {
+        item.classList.remove("selected");
+      });
+
+      button.classList.add("selected");
+    }
+
+    function showScreen(screenName) {
+      document.getElementById("basic-screen").classList.add("hidden");
+      document.getElementById("bio-screen").classList.add("hidden");
+      document.getElementById("interests-screen").classList.add("hidden");
+
+      document.getElementById(screenName + "-screen").classList.remove("hidden");
+      currentScreen = screenName;
+    }
+
+    function continueRegistration() {
       if (currentScreen === "basic") {
         const name = document.getElementById("name").value.trim();
         const age = Number(document.getElementById("age").value);
         const consent = document.getElementById("consent").checked;
+        const error = document.getElementById("basic-error");
 
         error.textContent = "";
 
@@ -364,30 +545,52 @@
           })
         );
 
-        document
-          .getElementById("basic-screen")
-          .classList.add("hidden");
+        showScreen("bio");
+        return;
+      }
 
-        document
-          .getElementById("bio-screen")
-          .classList.remove("hidden");
-
-        currentScreen = "bio";
-      } else {
+      if (currentScreen === "bio") {
         const bio = document.getElementById("bio").value.trim();
+        const error = document.getElementById("bio-error");
 
-        bioError.textContent = "";
+        error.textContent = "";
 
         if (bio.length < 20) {
-          bioError.textContent =
+          error.textContent =
             "O‘zingiz haqingizda kamida 20 ta belgi yozing.";
           return;
         }
 
         localStorage.setItem("userBio", bio);
 
+        showScreen("interests");
+        return;
+      }
+
+      if (currentScreen === "interests") {
+        const error = document.getElementById("interests-error");
+
+        error.textContent = "";
+
+        if (selectedInterests.length < 3) {
+          error.textContent = "Kamida 3 ta qiziqish tanlang.";
+          return;
+        }
+
+        if (!selectedLookingFor) {
+          error.textContent = "Kimni qidirayotganingizni tanlang.";
+          return;
+        }
+
+        localStorage.setItem(
+          "userInterests",
+          JSON.stringify(selectedInterests)
+        );
+
+        localStorage.setItem("lookingFor", selectedLookingFor);
+
         alert(
-          "Ajoyib! Ma’lumotlaringiz va bio saqlandi."
+          "Ajoyib! Profil ma’lumotlaringiz, bio va qiziqishlaringiz saqlandi."
         );
       }
     }
