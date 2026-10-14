@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tanishuv Mini App</title>
+  <title>Tanishuv Olami</title>
 
   <style>
     * {
@@ -19,7 +19,6 @@
     }
 
     .app {
-      width: 100%;
       max-width: 480px;
       min-height: 100vh;
       margin: 0 auto;
@@ -28,32 +27,39 @@
       flex-direction: column;
     }
 
-    .language {
+    .languages {
       display: flex;
       justify-content: flex-end;
-      gap: 8px;
-      margin-bottom: 40px;
+      gap: 10px;
+      margin-bottom: 45px;
     }
 
-    .language button {
+    .languages button {
       border: none;
       background: transparent;
-      color: #8d4de8;
+      color: #8e4de8;
+      font-size: 14px;
       font-weight: bold;
-      cursor: pointer;
+    }
+
+    .languages .active {
+      background: #8e4de8;
+      color: white;
+      padding: 7px 11px;
+      border-radius: 10px;
     }
 
     .logo {
-      width: 76px;
-      height: 76px;
-      margin: 0 auto 24px;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 22px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #a855f7, #ec4899);
       color: white;
-      font-size: 36px;
+      font-size: 34px;
     }
 
     h1 {
@@ -63,30 +69,94 @@
     }
 
     .subtitle {
-      margin: 12px 0 34px;
+      margin: 12px 0 30px;
       text-align: center;
       color: #777;
       line-height: 1.5;
     }
 
-    .card {
-      padding: 20px;
+    .form-card {
+      padding: 22px;
       border-radius: 22px;
       background: white;
       box-shadow: 0 8px 24px rgba(90, 60, 130, 0.08);
     }
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 20px;
+    .form-card h2 {
+      margin: 0 0 8px;
+      font-size: 23px;
     }
 
-    .card p {
+    .form-card p {
+      margin: 0 0 22px;
+      color: #777;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 7px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #934de8;
+    }
+
+    .gender-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .gender-button {
+      flex: 1;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .gender-button.selected {
+      border-color: #934de8;
+      background: #eee3ff;
+      color: #7534c5;
+      font-weight: bold;
+    }
+
+    .consent {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      margin-top: 22px;
       color: #666;
-      line-height: 1.5;
+      font-size: 14px;
+      line-height: 1.4;
     }
 
-    .start-button {
+    .consent input {
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+    }
+
+    .error {
+      min-height: 20px;
+      margin-top: 12px;
+      color: #d33b4b;
+      font-size: 14px;
+    }
+
+    .continue-button {
       width: 100%;
       margin-top: auto;
       padding: 17px;
@@ -99,7 +169,7 @@
       cursor: pointer;
     }
 
-    .start-button:active {
+    .continue-button:active {
       transform: scale(0.98);
     }
   </style>
@@ -107,8 +177,8 @@
 
 <body>
   <main class="app">
-    <div class="language">
-      <button>UZ</button>
+    <div class="languages">
+      <button class="active">UZ</button>
       <button>RU</button>
       <button>EN</button>
     </div>
@@ -118,25 +188,112 @@
     <h1>Tanishuv Olami</h1>
 
     <p class="subtitle">
-      Yangi insonlar bilan tanishing va o‘zingizga mos insonni toping.
+      O‘zingizga mos insonni toping va yangi tanishuvlarni boshlang.
     </p>
 
-    <section class="card">
-      <h2>Xush kelibsiz!</h2>
-      <p>
-        Profil yarating, qiziqishlaringizni tanlang va sizga mos insonlar
-        bilan tanishing.
-      </p>
+    <section class="form-card">
+      <h2>Ma’lumotlaringiz</h2>
+
+      <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
+
+      <label for="name">Ism</label>
+      <input
+        id="name"
+        type="text"
+        placeholder="Ismingizni kiriting"
+        maxlength="40"
+      />
+
+      <label for="age">Yosh</label>
+      <input
+        id="age"
+        type="number"
+        placeholder="Yoshingizni kiriting"
+        min="18"
+        max="100"
+      />
+
+      <label>Jins</label>
+
+      <div class="gender-buttons">
+        <button class="gender-button" onclick="selectGender('Erkak', this)">
+          Erkak
+        </button>
+
+        <button class="gender-button" onclick="selectGender('Ayol', this)">
+          Ayol
+        </button>
+      </div>
+
+      <label class="consent">
+        <input id="consent" type="checkbox" />
+        <span>
+          Men ommaviy oferta shartlarini o‘qib chiqdim va roziman.
+        </span>
+      </label>
+
+      <div id="error" class="error"></div>
     </section>
 
-    <button class="start-button" onclick="startApp()">
-      Boshlash
+    <button class="continue-button" onclick="continueRegistration()">
+      Davom etish
     </button>
   </main>
 
   <script>
-    function startApp() {
-      alert("Ro‘yxatdan o‘tish sahifasi keyingi bosqichda qo‘shiladi.");
+    let selectedGender = "";
+
+    function selectGender(gender, button) {
+      selectedGender = gender;
+
+      document.querySelectorAll(".gender-button").forEach((item) => {
+        item.classList.remove("selected");
+      });
+
+      button.classList.add("selected");
+    }
+
+    function continueRegistration() {
+      const name = document.getElementById("name").value.trim();
+      const age = Number(document.getElementById("age").value);
+      const consent = document.getElementById("consent").checked;
+      const error = document.getElementById("error");
+
+      error.textContent = "";
+
+      if (!name) {
+        error.textContent = "Ismingizni kiriting.";
+        return;
+      }
+
+      if (!age || age < 18) {
+        error.textContent =
+          "Ilovadan foydalanish uchun kamida 18 yoshda bo‘lishingiz kerak.";
+        return;
+      }
+
+      if (!selectedGender) {
+        error.textContent = "Jinsingizni tanlang.";
+        return;
+      }
+
+      if (!consent) {
+        error.textContent =
+          "Davom etish uchun oferta shartlariga rozilik bering.";
+        return;
+      }
+
+      localStorage.setItem(
+        "userBasicInfo",
+        JSON.stringify({
+          name: name,
+          age: age,
+          gender: selectedGender,
+          offerAccepted: true
+        })
+      );
+
+      alert("Ma’lumotlar saqlandi. Keyingi bosqichda bio sahifasi qo‘shiladi.");
     }
   </script>
 </body>
