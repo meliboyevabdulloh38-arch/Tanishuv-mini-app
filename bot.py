@@ -3,13 +3,14 @@ import requests
 
 from flask import Flask, request, jsonify
 
+
 app = Flask(__name__)
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "").strip()
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL", "").strip()
 
-SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY")
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip().rstrip("/")
+SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "").strip()
 
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
@@ -29,12 +30,12 @@ def set_webhook():
         print("BOT_TOKEN yoki WEBHOOK_URL mavjud emas")
         return
 
-    webhook_address = f"{WEBHOOK_URL.rstrip('/')}/webhook"
+    webhook_url = f"{WEBHOOK_URL.rstrip('/')}/webhook"
 
     result = telegram_request(
         "setWebhook",
         {
-            "url": webhook_address,
+            "url": webhook_url,
             "drop_pending_updates": True
         }
     )
@@ -80,16 +81,13 @@ def save_profile_to_supabase(profile_data):
     return response
 
 
+@app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+
     return response
-
-
-@app.after_request
-def apply_cors(response):
-    return add_cors_headers(response)
 
 
 @app.get("/")
@@ -130,7 +128,7 @@ def save_profile():
     if missing_fields:
         return jsonify({
             "ok": False,
-            "error": "Quyidagi maydonlar yetishmayapti",
+            "error": "Kerakli maydonlar yetishmayapti",
             "fields": missing_fields
         }), 400
 
@@ -141,11 +139,32 @@ def save_profile():
         }), 500
 
     try:
-        telegram_id = int(data["telegram_id"])
-        name = str(data["name"]).strip()
-        age = int(data["age"])
-        gender = str(data["gender"]).strip()
-        bio = str(data["bio"]).strip()
+        raw_telegram_id = data.get("telegram_id")
+        raw_age = data.get("age")
+
+        if raw_telegram_id is None or raw_telegram_id == "":
+            return jsonify({
+                "ok": False,
+                "error": "Telegram foydalanuvchi ID topilmadi"
+            }), 400
+
+        if raw_age is None or raw_age == "":
+            return jsonify({
+                "ok": False,
+                "error": "Yosh kiritilmagan"
+            }), 400
+
+        telegram_id = int(str(raw_telegram_id).strip())
+
+        if isinstance(raw_age, float):
+            age = int(raw_age)
+        else:
+            age_text = str(raw_age).strip()
+            age = int(float(age_text))
+
+        name = str(data.get("name", "")).strip()
+        gender = str(data.get("gender", "")).strip()
+        bio = str(data.get("bio", "")).strip()
 
         if not name:
             return jsonify({
@@ -162,7 +181,7 @@ def save_profile():
         if gender not in ["Erkak", "Ayol"]:
             return jsonify({
                 "ok": False,
-                "error": "Jins noto‘g‘ri ko‘rsatilgan"
+                "error": "Jins noto‘g‘ri tanlangan"
             }), 400
 
         if len(bio) < 20:
@@ -189,16 +208,28 @@ def save_profile():
                 "error": "Profilni Supabase’ga saqlab bo‘lmadi"
             }), 500
 
+        print("Profil muvaffaqiyatli saqlandi:", profile_data)
+
         return jsonify({
             "ok": True,
             "message": "Profil Supabase’ga saqlandi",
             "profile": response.json()
         })
 
-    except ValueError:
+    except ValueError as error:
+        print("Raqamga aylantirish xatosi:", str(error))
+        print(
+            "telegram_id turi:",
+            type(data.get("telegram_id")).__name__
+        )
+        print(
+            "age turi:",
+            type(data.get("age")).__name__
+        )
+
         return jsonify({
             "ok": False,
-            "error": "telegram_id yoki age raqam bo‘lishi kerak"
+            "error": "Yosh maydoniga faqat raqam kiriting."
         }), 400
 
     except Exception as error:
@@ -272,9 +303,11 @@ def webhook():
     return jsonify({"ok": True})
 
 
-if __name__ == "__main__":
-    set_webhook()
+# Gunicorn ishga tushganda webhook o‘rnatiladi
+set_webhook()
 
+
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
 
     app.run(
