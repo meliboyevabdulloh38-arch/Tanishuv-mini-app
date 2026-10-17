@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tanishuv Olami</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f7f4ff;
+      color: #202020;
+    }
+
+    .app {
+      max-width: 480px;
+      min-height: 100vh;
+      margin: auto;
+      padding: 22px 18px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .brand {
+      color: #8e4de8;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .lang {
+      border: 0;
+      background: #eee3ff;
+      color: #7534c5;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 22px;
+      background: white;
+      box-shadow: 0 8px 24px rgba(90, 60, 130, .09);
+    }
+
+    h1 {
+      font-size: 27px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 23px;
+      margin-top: 0;
+    }
+
+    p {
+      color: #777;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 7px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #934de8;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .choice-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .choice {
+      flex: 1;
+      min-width: 30%;
+      padding: 12px 8px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .choice.selected {
+      border-color: #934de8;
+      color: #7534c5;
+      background: #eee3ff;
+      font-weight: bold;
+    }
+
+    .consent {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .consent input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .counter {
+      text-align: right;
+      color: #888;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .interests {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .interest {
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .interest.selected {
+      border-color: #934de8;
+      background: #934de8;
+      color: white;
+    }
+
+    .photo-preview {
+      width: 170px;
+      height: 170px;
+      margin: 15px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px dashed #cbb5e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      text-align: center;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-input {
+      display: none;
+    }
+
+    .photo-button {
+      display: block;
+      width: max-content;
+      margin: auto;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: #eee3ff;
+      color: #7534c5;
+      font-weight: bold;
+    }
+
+    .main-button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      border: 0;
+      border-radius: 15px;
+      background: #934de8;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .main-button:disabled {
+      opacity: .6;
+    }
+
+    .error {
+      min-height: 20px;
+      margin-top: 10px;
+      color: #d33b4b;
+      font-size: 14px;
+    }
+
+    .success {
+      margin-top: 15px;
+      color: #268a4b;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <div class="top">
+      <div class="brand">Tanishuv Olami</div>
+      <button type="button" class="lang">UZ</button>
+    </div>
+
+    <!-- 1-qadam -->
+    <section id="basic-screen" class="card">
+      <h1>Ma’lumotlaringiz</h1>
+      <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
+
+      <label for="name">Ism</label>
+      <input
+        id="name"
+        type="text"
+        maxlength="40"
+        placeholder="Ismingizni kiriting"
+      >
+
+      <label for="age">Yosh</label>
+      <input
+        id="age"
+        type="number"
+        min="18"
+        max="100"
+        placeholder="Yoshingizni kiriting"
+      >
+
+      <label>Jins</label>
+
+      <div class="choice-row">
+        <button type="button" class="choice" onclick="chooseGender('Erkak', this)">
+          Erkak
+        </button>
+
+        <button type="button" class="choice" onclick="chooseGender('Ayol', this)">
+          Ayol
+        </button>
+      </div>
+
+      <label class="consent">
+        <input id="consent" type="checkbox">
+        <span>
+          Men ommaviy oferta shartlarini o‘qib chiqdim va roziman.
+        </span>
+      </label>
+
+      <div id="basic-error" class="error"></div>
+    </section>
+
+    <!-- 2-qadam -->
+    <section id="bio-screen" class="card hidden">
+      <h2>O‘zingiz haqingizda</h2>
+      <p>Qisqacha o‘zingiz haqingizda yozing</p>
+
+      <textarea
+        id="bio"
+        maxlength="500"
+        placeholder="Salom, men..."
+        oninput="updateCounter()"
+      ></textarea>
+
+      <div class="counter">
+        <span id="counter">0</span>/500
+      </div>
+
+      <div id="bio-error" class="error"></div>
+    </section>
+
+    <!-- 3-qadam -->
+    <section id="interests-screen" class="card hidden">
+      <h2>Qiziqishlar</h2>
+      <p>Hobbilaringiz va afzalliklaringizni tanlang</p>
+
+      <div id="interests" class="interests"></div>
+
+      <p>
+        Tanlangan: <b id="interest-count">0</b>
+      </p>
+
+      <label>Kimni qidiryapsiz?</label>
+
+      <div class="choice-row">
+        <button type="button" class="choice" onclick="chooseLooking('Erkak', this)">
+          Erkak
+        </button>
+
+        <button type="button" class="choice" onclick="chooseLooking('Ayol', this)">
+          Ayol
+        </button>
+
+        <button type="button" class="choice" onclick="chooseLooking('Farqi yo‘q', this)">
+          Farqi yo‘q
+        </button>
+      </div>
+
+      <div id="interest-error" class="error"></div>
+    </section>
+
+    <!-- 4-qadam -->
+    <section id="photo-screen" class="card hidden">
+      <h2>Profil rasmingiz</h2>
+      <p>O‘zingizning rasmingizni yuklang</p>
+
+      <div id="photo-preview" class="photo-preview">
+        Rasm tanlanmagan
+      </div>
+
+      <label for="photo" class="photo-button">
+        Rasm tanlash
+      </label>
+
+      <input
+        id="photo"
+        class="photo-input"
+        type="file"
+        accept="image/*"
+        onchange="previewPhoto(event)"
+      >
+
+      <div id="photo-error" class="error"></div>
+    </section>
+
+    <!-- 5-qadam -->
+    <section id="success-screen" class="card hidden">
+      <h2>Profil yaratildi</h2>
+      <p>
+        Profilingiz muvaffaqiyatli saqlandi. Endi sizga mos insonlarni
+        topishingiz mumkin.
+      </p>
+
+      <div class="success">
+        Ma’lumotlar serverga yuborildi.
+      </div>
+    </section>
+
+    <button
+      type="button"
+      id="continue-button"
+      class="main-button"
+      onclick="continueStep()"
+    >
+      Davom etish
+    </button>
+
+  </main>
+
+  <script>
+    const BACKEND_URL =
+      "https://tanishuv-mini-app1.onrender.com";
+
+    const telegram =
+      window.Telegram && window.Telegram.WebApp
+        ? window.Telegram.WebApp
+        : null;
+
+    // Mini App Telegram ichida ochilishi kerak.
+    // BACKEND_URL Render’dagi Flask backend manziliga teng bo‘lishi shart.
+
+    if (telegram) {
+      telegram.ready();
+      telegram.expand();
+    }
+
+    let step = "basic";
+    let gender = "";
+    let lookingFor = "";
+    let selectedInterests = [];
+    let profilePhoto = "";
+
+    const interestList = [
+      "Musiqa",
+      "Sayohat",
+      "Oshpazlik",
+      "Fotografiya",
+      "Fitness",
+      "Tabiat",
+      "Shaxmat",
+      "Kofe",
+      "Kitob o‘qish",
+      "Raqs",
+      "Kino",
+      "San’at",
+      "Dasturlash",
+      "Suzish",
+      "Hayvonlar",
+      "Sport",
+      "O‘yinlar",
+      "Yoga",
+      "Futbol",
+      "Velosiped"
+    ];
+
+    const interestBox =
+      document.getElementById("interests");
+
+    interestList.forEach(function(item) {
+      const button = document.createElement("button");
+
+      button.className = "interest";
+      button.textContent = item;
+
+      button.onclick = function() {
+        if (selectedInterests.includes(item)) {
+          selectedInterests =
+            selectedInterests.filter(function(value) {
+              return value !== item;
+            });
+
+          button.classList.remove("selected");
+        } else {
+          selectedInterests.push(item);
+          button.classList.add("selected");
+        }
+
+        document.getElementById("interest-count")
+          .textContent = selectedInterests.length;
+      };
+
+      interestBox.appendChild(button);
+    });
+
+    function chooseGender(value, button) {
+      gender = value;
+
+      document
+        .querySelectorAll("#basic-screen .choice")
+        .forEach(function(item) {
+          item.classList.remove("selected");
+        });
+
+      button.classList.add("selected");
+    }
+
+    function chooseLooking(value, button) {
+      lookingFor = value;
+
+      document
+        .querySelectorAll("#interests-screen .choice")
+        .forEach(function(item) {
+          item.classList.remove("selected");
+        });
+
+      button.classList.add("selected");
+    }
+
+    function updateCounter() {
+      document.getElementById("counter").textContent =
+        document.getElementById("bio").value.length;
+    }
+
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      const error = document.getElementById("photo-error");
+
+      error.textContent = "";
+
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        error.textContent = "Faqat rasm faylini tanlang.";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        error.textContent =
+          "Rasm hajmi 5 MB dan oshmasligi kerak.";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(result) {
+        profilePhoto = result.target.result;
+
+        document.getElementById("photo-preview").innerHTML =
+          "<img src='" +
+          profilePhoto +
+          "' alt='Profil rasmi'>";
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function showStep(name) {
+      const screens = [
+        "basic-screen",
+        "bio-screen",
+        "interests-screen",
+        "photo-screen",
+        "success-screen"
+      ];
+
+      screens.forEach(function(screen) {
+        document.getElementById(screen)
+          .classList.add("hidden");
+      });
+
+      document.getElementById(name + "-screen")
+        .classList.remove("hidden");
+
+      step = name;
+    }
+
+    function getTelegramId() {
+      if (
+        telegram &&
+        telegram.initDataUnsafe &&
+        telegram.initDataUnsafe.user &&
+        telegram.initDataUnsafe.user.id
+      ) {
+        return telegram.initDataUnsafe.user.id;
+      }
+
+      return null;
+    }
+
+    async function sendProfileToServer() {
+      const basicInfo =
+        JSON.parse(localStorage.getItem("userBasicInfo") || "{}");
+
+      const bio =
+        localStorage.getItem("userBio") || "";
+
+      const telegramId = getTelegramId();
+
+      if (!telegramId) {
+        throw new Error(
+          "Telegram foydalanuvchi ID topilmadi. Mini App’ni Telegram ichida oching."
+        );
+      }
+
+      const response = await fetch(
+        BACKEND_URL + "/api/profile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            telegram_id: telegramId,
+            name: basicInfo.name,
+            age: basicInfo.age,
+            gender: basicInfo.gender,
+            bio: bio,
+            interests: selectedInterests,
+            looking_for: lookingFor,
+            photo: profilePhoto
+          })
+        }
+      );
+
+      const result = await response.json().catch(function() {
+        return { ok: false, error: "Server JSON javob bermadi." };
+      });
+
+      if (!response.ok || !result.ok) {
+        throw new Error(
+          result.error || "Profilni serverga saqlab bo‘lmadi."
+        );
+      }
+
+      return result;
+    }
+
+    async function continueStep() {
+      const button =
+        document.getElementById("continue-button");
+
+      if (step === "basic") {
+        const name =
+          document.getElementById("name").value.trim();
+
+        const age =
+          Number(document.getElementById("age").value);
+
+        const consent =
+          document.getElementById("consent").checked;
+
+        const error =
+          document.getElementById("basic-error");
+
+        error.textContent = "";
+
+        if (!name) {
+          error.textContent = "Ismingizni kiriting.";
+          return;
+        }
+
+        if (!age || age < 18 || age > 100) {
+          error.textContent =
+            "Yosh 18 dan 100 gacha bo‘lishi kerak.";
+          return;
+        }
+
+        if (!gender) {
+          error.textContent = "Jinsingizni tanlang.";
+          return;
+        }
+
+        if (!consent) {
+          error.textContent =
+            "Oferta shartlariga rozilik bering.";
+          return;
+        }
+
+        localStorage.setItem(
+          "userBasicInfo",
+          JSON.stringify({
+            name: name,
+            age: age,
+            gender: gender,
+            offerAccepted: true
+          })
+        );
+
+        showStep("bio");
+        return;
+      }
+
+      if (step === "bio") {
+        const bio =
+          document.getElementById("bio").value.trim();
+
+        const error =
+          document.getElementById("bio-error");
+
+        error.textContent = "";
+
+        if (bio.length < 20) {
+          error.textContent =
+            "Kamida 20 ta belgi yozing.";
+          return;
+        }
+
+        localStorage.setItem("userBio", bio);
+        showStep("interests");
+        return;
+      }
+
+      if (step === "interests") {
+        const error =
+          document.getElementById("interest-error");
+
+        error.textContent = "";
+
+        if (selectedInterests.length < 3) {
+          error.textContent =
+            "Kamida 3 ta qiziqish tanlang.";
+          return;
+        }
+
+        if (!lookingFor) {
+          error.textContent =
+            "Kimni qidirayotganingizni tanlang.";
+          return;
+        }
+
+        localStorage.setItem(
+          "userInterests",
+          JSON.stringify(selectedInterests)
+        );
+
+        localStorage.setItem(
+          "lookingFor",
+          lookingFor
+        );
+
+        showStep("photo");
+        return;
+      }
+
+      if (step === "photo") {
+        const error =
+          document.getElementById("photo-error");
+
+        error.textContent = "";
+
+        if (!profilePhoto) {
+          error.textContent =
+            "Profil rasmini tanlang.";
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Saqlanmoqda...";
+
+        localStorage.setItem(
+          "profilePhoto",
+          profilePhoto
+        );
+
+        try {
+          await sendProfileToServer();
+
+          showStep("success");
+          button.classList.add("hidden");
+
+          if (telegram && telegram.MainButton) {
+            telegram.MainButton.hide();
+          }
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = "Davom etish";
+          document.getElementById("photo-error")
+            .textContent = error.message;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
