@@ -719,6 +719,31 @@
       document.getElementById("dashboard-message").textContent = "Sozlamalar bo‘limi keyingi bosqichda qo‘shiladi.";
     }
 
+    async function checkExistingProfile() {
+      const telegramId = getTelegramId();
+      if (!telegramId) return;
+
+      try {
+        const response = await fetch(
+          BACKEND_URL + "/api/profile?telegram_id=" + encodeURIComponent(telegramId)
+        );
+        const result = await response.json();
+        if (response.ok && result.ok && result.exists) {
+          const profile = result.profile;
+          localStorage.setItem("userBasicInfo", JSON.stringify({
+            name: profile.name,
+            age: profile.age,
+            gender: profile.gender,
+            offerAccepted: true
+          }));
+          localStorage.setItem("userBio", profile.bio || "");
+          openDashboard();
+        }
+      } catch (error) {
+        console.log("Profilni avtomatik tekshirishda xatolik:", error);
+      }
+    }
+
     async function openProfiles() {
       showStep("profiles");
       const error = document.getElementById("profiles-error");
@@ -923,6 +948,8 @@
         }
       }
     }
+
+    checkExistingProfile();
   </script>
 </body>
 </html>

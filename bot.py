@@ -140,6 +140,39 @@ def save_profile():
         return jsonify({"ok": False, "error": "Supabase bilan ulanishda xatolik"}), 500
 
 
+@app.get("/api/profile")
+def get_profile():
+    telegram_id = request.args.get("telegram_id", "").strip()
+    if not telegram_id:
+        return jsonify({"ok": False, "error": "Telegram ID topilmadi"}), 400
+    if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
+        return jsonify({"ok": False, "error": "Supabase sozlanmagan"}), 500
+
+    try:
+        response = requests.get(
+            f"{SUPABASE_URL}/rest/v1/profiles",
+            headers=supabase_headers(),
+            params={
+                "select": "telegram_id,name,age,gender,bio",
+                "telegram_id": f"eq.{int(telegram_id)}",
+                "limit": 1,
+            },
+            timeout=20,
+        )
+        if response.status_code >= 300:
+            print("Profilni olish xatosi:", response.text)
+            return jsonify({"ok": False, "error": "Profilni olib bo‘lmadi"}), 500
+        profiles = response.json()
+        return jsonify({
+            "ok": True,
+            "exists": bool(profiles),
+            "profile": profiles[0] if profiles else None,
+        })
+    except (ValueError, requests.RequestException) as error:
+        print("Profil GET xatosi:", error)
+        return jsonify({"ok": False, "error": "Profilni tekshirishda xatolik"}), 500
+
+
 @app.get("/api/profiles")
 def get_profiles():
     telegram_id = request.args.get("telegram_id", "").strip()
