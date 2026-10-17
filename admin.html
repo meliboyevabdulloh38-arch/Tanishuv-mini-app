@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tanishuv Olami — Admin</title>
+<style>
+:root{font-family:Inter,Arial,sans-serif;color:#292333;background:#f7f3ff}*{box-sizing:border-box}body{margin:0}.hidden{display:none!important}.wrap{max-width:980px;margin:auto;padding:24px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.head h1{margin:0;font-size:26px}.badge{padding:8px 12px;border-radius:99px;background:#eadcff;color:#7435c5;font-weight:700}.login,.panel,.stat{background:#fff;border-radius:20px;padding:20px;box-shadow:0 8px 28px #6d4a9512;margin-bottom:18px}input,textarea,button{font:inherit}input,textarea{width:100%;border:1px solid #e5dff0;border-radius:12px;padding:12px;margin:8px 0 12px}textarea{min-height:110px;resize:vertical}button{border:0;border-radius:12px;padding:12px 16px;background:#914be5;color:#fff;font-weight:700;cursor:pointer}button.secondary{background:#eee7f8;color:#6434a0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.stat b{display:block;font-size:30px;color:#8b43dd}.stat span{color:#777}.row{display:flex;gap:10px;align-items:center}.row>*:first-child{flex:1}.status{margin-top:10px;color:#6a5878;font-size:14px}.table{overflow:auto}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:11px;border-bottom:1px solid #eee;font-size:14px}@media(max-width:650px){.wrap{padding:15px}.grid{grid-template-columns:1fr 1fr}.head h1{font-size:21px}}
+</style></head>
+<body><main class="wrap">
+<div class="head"><h1>Tanishuv Olami Admin</h1><span class="badge">Boshqaruv paneli</span></div>
+<section class="login"><b>Admin ID</b><input id="adminId" inputmode="numeric" placeholder="Telegram ID raqamingiz"><div class="row"><button onclick="loadStats()">Panelni ochish</button><button class="secondary" onclick="clearPanel()">Tozalash</button></div><div id="loginStatus" class="status"></div></section>
+<section id="content" class="hidden">
+<div class="grid"><div class="stat"><b id="total">0</b><span>Jami foydalanuvchi</span></div><div class="stat"><b id="male">0</b><span>Erkaklar</span></div><div class="stat"><b id="female">0</b><span>Ayollar</span></div></div>
+<section class="panel"><h2>E’lon yuborish</h2><textarea id="broadcast" placeholder="Barcha foydalanuvchilarga yuboriladigan xabar..."></textarea><button onclick="sendBroadcast()">E’lonni yuborish</button><div id="broadcastStatus" class="status"></div></section>
+<section class="panel"><h2>Foydalanuvchilar</h2><div class="table"><table><thead><tr><th>ID</th><th>Ism</th><th>Yosh</th><th>Jins</th></tr></thead><tbody id="users"></tbody></table></div></section>
+</section></main>
+<script>
+const BACKEND='https://tanishuv-mini-app1.onrender.com';
+function id(){return document.getElementById('adminId').value.trim()}
+async function loadStats(){const status=document.getElementById('loginStatus');status.textContent='Yuklanmoqda...';try{const r=await fetch(BACKEND+'/api/admin/stats?admin_id='+encodeURIComponent(id()));const d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||'Ruxsat berilmadi');document.getElementById('content').classList.remove('hidden');document.getElementById('total').textContent=d.stats.total_users;document.getElementById('male').textContent=d.stats.male_users;document.getElementById('female').textContent=d.stats.female_users;document.getElementById('users').innerHTML=(d.stats.profiles||[]).map(u=>`<tr><td>${u.telegram_id}</td><td>${esc(u.name)}</td><td>${u.age}</td><td>${esc(u.gender)}</td></tr>`).join('');status.textContent='Panel ochildi';}catch(e){status.textContent=e.message}}
+async function sendBroadcast(){const text=document.getElementById('broadcast').value.trim();const out=document.getElementById('broadcastStatus');if(!text){out.textContent='Avval xabar yozing';return}out.textContent='Yuborilmoqda...';try{const r=await fetch(BACKEND+'/api/admin/broadcast',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({admin_id:id(),text})});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.error||'Xatolik');out.textContent=`Jami: ${d.total}, yuborildi: ${d.sent}, xato: ${d.failed}`;}catch(e){out.textContent=e.message}}
+function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}function clearPanel(){document.getElementById('content').classList.add('hidden');document.getElementById('loginStatus').textContent=''}
+</script></body></html>
