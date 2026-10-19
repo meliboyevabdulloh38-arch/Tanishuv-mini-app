@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tanishuv Olami</title>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f7f4ff;
+      color: #202020;
+    }
+
+    .app {
+      max-width: 480px;
+      min-height: 100vh;
+      margin: auto;
+      padding: 22px 18px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .brand {
+      color: #8e4de8;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .lang {
+      border: 0;
+      background: #eee3ff;
+      color: #7534c5;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .card {
+      padding: 20px;
+      border-radius: 22px;
+      background: white;
+      box-shadow: 0 8px 24px rgba(90, 60, 130, .09);
+    }
+
+    h1 {
+      font-size: 27px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 23px;
+      margin-top: 0;
+    }
+
+    p {
+      color: #777;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 7px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+      font-family: Arial, sans-serif;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #934de8;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .choice-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .choice {
+      flex: 1;
+      min-width: 30%;
+      padding: 12px 8px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .choice.selected {
+      border-color: #934de8;
+      color: #7534c5;
+      background: #eee3ff;
+      font-weight: bold;
+    }
+
+    .consent {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .consent input {
+      width: 18px;
+      height: 18px;
+    }
+
+    .counter {
+      text-align: right;
+      color: #888;
+      font-size: 13px;
+      margin-top: 5px;
+    }
+
+    .interests {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .interest {
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      background: white;
+      font-size: 14px;
+    }
+
+    .interest.selected {
+      border-color: #934de8;
+      background: #934de8;
+      color: white;
+    }
+
+    .photo-preview {
+      width: 170px;
+      height: 170px;
+      margin: 15px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px dashed #cbb5e8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      text-align: center;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-input {
+      display: none;
+    }
+
+    .photo-button {
+      display: block;
+      width: max-content;
+      margin: auto;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: #eee3ff;
+      color: #7534c5;
+      font-weight: bold;
+    }
+
+    .main-button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      border: 0;
+      border-radius: 15px;
+      background: #934de8;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .main-button:disabled {
+      opacity: .6;
+    }
+
+    .error {
+      min-height: 20px;
+      margin-top: 10px;
+      color: #d33b4b;
+      font-size: 14px;
+    }
+
+    .success {
+      margin-top: 15px;
+      color: #268a4b;
+      text-align: center;
+    }
+
+    .dashboard-screen { background: linear-gradient(180deg, #fbf8ff 0%, #fff 100%); border-radius: 28px; padding: 22px 18px 14px; }
+    .dashboard-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+    .eyebrow { color:#9a5ae8; font-size:11px; letter-spacing:2px; font-weight:800; }
+    .dashboard-head h2 { margin:5px 0 2px; font-size:26px; }
+    .muted { color:#8e8a99; margin:0; font-size:14px; }
+    .avatar-button { width:48px; height:48px; border:0; border-radius:16px; background:#eee4ff; font-size:23px; }
+    .discover-card { position:relative; overflow:hidden; min-height:210px; border-radius:25px; padding:23px; color:#fff; background:linear-gradient(135deg,#8d45e8,#c15be7); box-shadow:0 14px 28px rgba(142,69,232,.24); }
+    .discover-content { position:relative; z-index:2; max-width:245px; }
+    .discover-label { font-size:11px; letter-spacing:1.7px; font-weight:800; opacity:.8; }
+    .discover-card h3 { font-size:23px; line-height:1.15; margin:10px 0 8px; }
+    .discover-card p { color:rgba(255,255,255,.82); font-size:13px; line-height:1.4; margin:0 0 16px; }
+    .discover-button { border:0; border-radius:12px; padding:12px 15px; color:#7b35c7; background:#fff; font-weight:800; }
+    .discover-button span { margin-left:12px; font-size:18px; }
+    .discover-symbol { position:absolute; right:-12px; bottom:-28px; font-size:150px; line-height:1; color:rgba(255,255,255,.15); }
+    .quick-title { display:flex; justify-content:space-between; align-items:center; margin:23px 2px 11px; font-weight:800; }
+    .quick-title button { border:0; background:none; color:#8b45df; font-size:13px; }
+    .quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+    .quick-card { min-height:116px; border:0; border-radius:22px; padding:16px; text-align:left; color:#30283d; position:relative; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease; box-shadow:0 7px 18px rgba(48,35,70,.06); }
+    .quick-card::after { content:""; position:absolute; width:76px; height:76px; right:-22px; bottom:-25px; border-radius:50%; background:rgba(255,255,255,.42); }
+    .quick-card:active { transform:scale(.96); }
+    .quick-card:hover { transform:translateY(-3px); box-shadow:0 12px 24px rgba(48,35,70,.12); }
+    .quick-card b,.quick-card small { display:block; }
+    .quick-card small { margin-top:4px; color:#8d8597; font-size:11px; }
+    .quick-icon { display:grid; place-items:center; width:40px; height:40px; margin-bottom:10px; border-radius:14px; background:rgba(255,255,255,.62); font-size:21px; position:relative; z-index:1; }
+    .quick-card b, .quick-card small { position:relative; z-index:1; }
+    .purple { background:linear-gradient(135deg,#ead7ff,#c69af7); } .pink { background:linear-gradient(135deg,#ffdce9,#ffabc9); } .blue { background:linear-gradient(135deg,#d8efff,#9ed4ff); } .gold { background:linear-gradient(135deg,#ffefbd,#ffd36d); }
+    .settings-panel { margin-top:16px; padding:4px 14px; background:#fff; border-radius:18px; box-shadow:0 5px 18px rgba(50,30,80,.06); }
+    .setting-row { display:flex; justify-content:space-between; align-items:center; width:100%; padding:15px 0; border:0; border-bottom:1px solid #f1edf5; background:none; color:#39333f; text-align:left; transition:padding-left .18s ease, background .18s ease; }
+    .setting-row:active { padding-left:6px; }
+    .setting-row:last-child { border-bottom:0; } .setting-left { display:flex; align-items:center; gap:9px; font-weight:600; }
+    .setting-left i { display:grid; place-items:center; width:27px; height:27px; border-radius:9px; background:#f1e8ff; color:#8c45df; font-style:normal; }
+    .setting-row small { color:#9b62df; }
+    .bottom-nav { display:flex; justify-content:space-around; margin-top:18px; padding:8px 2px 2px; border-radius:18px; background:#fff; }
+    .bottom-nav button { display:flex; flex-direction:column; align-items:center; gap:4px; border:0; background:transparent; color:#aaa3b0; font-size:20px; }
+    .bottom-nav button.active,.bottom-nav button:hover { color:#8d45df; } .bottom-nav button.active span { display:grid; place-items:center; width:38px; height:28px; border-radius:12px; background:#eee2ff; } .bottom-nav small { font-size:10px; font-weight:600; }
+
+
+    .profile-hero{display:flex;align-items:center;gap:14px;padding:18px;border-radius:22px;background:#fff;margin-bottom:16px}.profile-hero-photo{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:#eadcff;color:#934de8;font-size:38px;overflow:hidden}.profile-hero-photo img{width:100%;height:100%;object-fit:cover}.profile-hero-info{flex:1}.profile-hero-info h2{margin:4px 0;font-size:27px}.profile-hero-info span{color:#787481}.round-arrow{width:54px;height:54px;border:0;border-radius:50%;background:#964ee5;color:#fff;font-size:30px}.premium-button{width:100%;padding:17px;border:0;border-radius:20px;background:linear-gradient(135deg,#9848e7,#bd5ce7);color:#fff;font-weight:800;font-size:18px;margin:0 0 16px;box-shadow:0 9px 20px #9848e744}.professional-menu{background:#fff;padding:4px 18px;border-radius:22px}.professional-menu .setting-row{min-height:68px}.switch-off{width:48px;height:27px;border-radius:20px;background:#e6e6e8;position:relative;margin-left:8px}.switch-off:before{content:"";position:absolute;left:3px;top:3px;width:21px;height:21px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #999}.switch-on{background:#a455e8}.switch-on:before{left:24px}.search-head,.screen-head{display:flex;align-items:center;justify-content:space-between}.screen-head{margin-bottom:20px}.screen-head button,.filter-button{border:0;background:none;font-size:28px;color:#8845d8}.screen-head h2{margin:auto;font-size:25px}.swipe-card{min-height:440px;border-radius:28px;background:linear-gradient(160deg,#292238,#171520);color:#fff;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 12px 30px #33223d44}.swipe-card h2{font-size:32px;margin:0 0 5px}.swipe-card p{color:#ddd}.search-actions{display:flex;justify-content:center;gap:26px;margin:20px 0}.search-actions button{width:62px;height:62px;border-radius:50%;font-size:30px;border:0}.action-no{background:#eee;color:#555}.action-yes{background:#ff3f66;color:#fff}.action-chat{background:#ddd;color:#555}.my-profile-card,.premium-box{background:#fff;border-radius:22px;padding:24px;text-align:center;margin-bottom:16px}.my-profile-card .profile-hero-photo{margin:auto}.wide-secondary,.wide-danger,.faq-row{width:100%;padding:15px;border:0;border-radius:14px;margin:6px 0}.wide-secondary,.faq-row{background:#eee6fa;color:#6637a0}.wide-danger{background:#ffe5e9;color:#cf3d56}.empty-state{text-align:center;padding:120px 20px}.empty-state>div{font-size:70px;color:#9a4fe6}.empty-state h3{font-size:23px}.empty-state p{color:#777}.support{padding:16px;background:#f0e6ff;border-radius:14px;color:#7740b7}
+
+    body{background:#f4f2fa;color:#24212a}.dashboard-screen,.card,.inner-screen{background:#f4f2fa;color:#24212a}.professional-menu,.profile-hero,.my-profile-card,.premium-box{background:#fff}.setting-row{color:#24212a}.bottom-nav{background:#fff}.bottom-nav button{color:#58545f}.bottom-nav button.active{color:#914de4}.swipe-card{background:linear-gradient(160deg,#292238,#111018)}
+    /* Dark, ko‘zga qulay yakuniy mavzu */
+    body { background:#12101a; color:#f5f1fb; }
+    .app { background:#12101a; }
+    .card, .dashboard-screen { background:#1c1926; color:#f5f1fb; box-shadow:0 10px 30px rgba(0,0,0,.25); }
+    p, .muted { color:#aaa3b5; }
+    input[type="text"], input[type="number"], textarea { background:#262231; color:#fff; border-color:#3a3349; }
+    input::placeholder, textarea::placeholder { color:#81798d; }
+    .choice, .interest { background:#262231; color:#eee8f7; border-color:#403750; }
+    .choice.selected { background:#4c2b72; border-color:#b477f4; color:#e7cbff; }
+    .consent { color:#aaa3b5; }
+    .lang { background:#342448; color:#d8b7ff; }
+    .settings-panel, .bottom-nav { background:#24202f; }
+    .setting-row { color:#f1ebfa; border-color:#393245; }
+    .setting-left i { background:#38274e; color:#d2a8ff; }
+    .bottom-nav button { color:#958da1; }
+    .bottom-nav button.active span { background:#493064; }
+    .quick-card b { color:#30283d; }
+    .error { color:#ff8090; }
+    .success { color:#79dfac; }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .profile-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .profile-actions button {
+      flex: 1;
+      padding: 14px;
+      border: 0;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+
+    .dislike-button { background: #eee; color: #555; }
+    .like-button { background: #934de8; color: white; }
+    .profile-card { text-align: center; }
+
+    .menu-list { display: grid; gap: 10px; margin-top: 15px; }
+    .menu-item { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 15px; border: 1px solid #eee; border-radius: 13px; background: #fff; font-size: 16px; text-align: left; }
+    .menu-item small { color: #888; }
+    .bottom-nav { display: flex; justify-content: space-around; margin-top: 18px; padding: 12px 4px; border-radius: 16px; background: #fff; box-shadow: 0 4px 16px rgba(90,60,130,.08); }
+    .bottom-nav button { border: 0; background: transparent; font-size: 22px; }
+    .vip-badge { color: #934de8; font-weight: bold; }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+
+    <div class="top">
+      <div class="brand">Tanishuv Olami</div>
+      <button type="button" class="lang">UZ</button>
+    </div>
+
+    <!-- 1-qadam -->
+    <section id="basic-screen" class="card">
+      <h1>Ma’lumotlaringiz</h1>
+      <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
+
+      <label for="name">Ism</label>
+      <input
+        id="name"
+        type="text"
+        maxlength="40"
+        placeholder="Ismingizni kiriting"
+      >
+
+      <label for="age">Yosh</label>
+      <input
+        id="age"
+        type="number"
+        min="18"
+        max="100"
+        placeholder="Yoshingizni kiriting"
+      >
+
+      <label>Jins</label>
+
+      <div class="choice-row">
+        <button type="button" class="choice" onclick="chooseGender('Erkak', this)">
+          Erkak
+        </button>
+
+        <button type="button" class="choice" onclick="chooseGender('Ayol', this)">
+          Ayol
+        </button>
+      </div>
+
+      <label class="consent">
+        <input id="consent" type="checkbox">
+        <span>
+          Men ommaviy oferta shartlarini o‘qib chiqdim va roziman.
+        </span>
+      </label>
+
+      <div id="basic-error" class="error"></div>
+    </section>
+
+    <!-- 2-qadam -->
+    <section id="bio-screen" class="card hidden">
+      <h2>O‘zingiz haqingizda</h2>
+      <p>Qisqacha o‘zingiz haqingizda yozing</p>
+
+      <textarea
+        id="bio"
+        maxlength="500"
+        placeholder="Salom, men..."
+        oninput="updateCounter()"
+      ></textarea>
+
+      <div class="counter">
+        <span id="counter">0</span>/500
+      </div>
+
+      <div id="bio-error" class="error"></div>
+    </section>
+
+    <!-- 3-qadam -->
+    <section id="interests-screen" class="card hidden">
+      <h2>Qiziqishlar</h2>
+      <p>Hobbilaringiz va afzalliklaringizni tanlang</p>
+
+      <div id="interests" class="interests"></div>
+
+      <p>
+        Tanlangan: <b id="interest-count">0</b>
+      </p>
+
+      <label>Kimni qidiryapsiz?</label>
+
+      <div class="choice-row">
+        <button type="button" class="choice" onclick="chooseLooking('Erkak', this)">
+          Erkak
+        </button>
+
+        <button type="button" class="choice" onclick="chooseLooking('Ayol', this)">
+          Ayol
+        </button>
+
+        <button type="button" class="choice" onclick="chooseLooking('Farqi yo‘q', this)">
+          Farqi yo‘q
+        </button>
+      </div>
+
+      <div id="interest-error" class="error"></div>
+    </section>
+
+    <!-- 4-qadam -->
+    <section id="photo-screen" class="card hidden">
+      <h2>Profil rasmingiz</h2>
+      <p>O‘zingizning rasmingizni yuklang</p>
+
+      <div id="photo-preview" class="photo-preview">
+        Rasm tanlanmagan
+      </div>
+
+      <label for="photo" class="photo-button">
+        Rasm tanlash
+      </label>
+
+      <input
+        id="photo"
+        class="photo-input"
+        type="file"
+        accept="image/*"
+        onchange="previewPhoto(event)"
+      >
+
+      <div id="photo-error" class="error"></div>
+    </section>
+
+    <!-- Asosiy menyu -->
+    <section id="dashboard-screen" class="dashboard-screen hidden">
+      <div class="profile-hero" id="dashboard-hero">
+        <div class="profile-hero-photo" id="dashboard-photo">◎</div>
+        <div class="profile-hero-info"><span id="dashboard-age-gender">Profilingiz</span><h2 id="dashboard-name">Do‘stim</h2></div>
+        <button class="round-arrow" onclick="showMyProfile()">→</button>
+      </div>
+      <button class="premium-button" onclick="openPremium()">◆ &nbsp; Premium sotib olish</button>
+      <div class="menu-list professional-menu">
+        <button class="setting-row" onclick="showMyProfile()"><span class="setting-left"><i>▤</i><span>Mening profilim</span></span><b>›</b></button>
+        <button class="setting-row" onclick="showSearchSettings()"><span class="setting-left"><i>☷</i><span>Qidiruv sozlamalari</span></span><b>›</b></button>
+        <button class="setting-row" onclick="toggleInvisible()"><span class="setting-left"><i>◉</i><span>Ko‘rinmas rejim</span></span><small id="invisible-status">VIP kerak</small><span class="switch-off" id="invisible-switch"></span></button>
+        <button class="setting-row" onclick="toggleAdFree()"><span class="setting-left"><i>✧</i><span>Reklamasiz</span></span><small>VIP</small><span class="switch-off" id="adfree-switch"></span></button>
+        <button class="setting-row" onclick="openSettings()"><span class="setting-left"><i>◎</i><span>Til</span></span><span>O‘zbekcha　›</span></button>
+        <button class="setting-row" onclick="toggleTheme()"><span class="setting-left"><i>☼</i><span>Mavzu</span></span><span id="theme-label">Yorug‘　›</span></button>
+        <button class="setting-row" onclick="openHelp()"><span class="setting-left"><i>➤</i><span>Yordam</span></span><b>›</b></button>
+        <button class="setting-row" onclick="openOffer()"><span class="setting-left"><i>▤</i><span>Ommaviy oferta</span></span><b>›</b></button>
+      </div>
+      <div id="dashboard-message" class="success"></div>
+      <nav class="bottom-nav professional-nav">
+        <button type="button" class="active" onclick="openProfiles()"><span>♨</span><small>Qidiruv</small></button>
+        <button type="button" onclick="showMessages()"><span>◌</span><small>Xabarlar</small></button>
+        <button type="button" onclick="showLikes()"><span>♡</span><small>Like’lar</small></button>
+        <button type="button" onclick="showMyProfile()"><span>♙</span><small>Profil</small></button>
+      </nav>
+    </section>
+    <!-- Qidiruv: yangi profillar shu bo‘lim ichida -->
+    <section id="profiles-screen" class="profiles-screen card hidden">
+      <div class="search-head"><div><div class="eyebrow">TANISHUV OLAMI</div><h2>Qidiruv</h2></div><button class="filter-button" onclick="showSearchSettings()">☷</button></div>
+      <div class="swipe-card" id="profile-card">Yuklanmoqda...</div>
+      <div class="search-actions"><button class="action-no" onclick="profileAction('dislike')">×</button><button class="action-yes" onclick="profileAction('like')">♥</button><button class="action-chat" onclick="openPremium()">◌</button></div>
+      <div id="profiles-error" class="error"></div>
+      <nav class="bottom-nav professional-nav"><button class="active" onclick="openProfiles()"><span>♨</span><small>Qidiruv</small></button><button onclick="showMessages()"><span>◌</span><small>Xabarlar</small></button><button onclick="showLikes()"><span>♡</span><small>Like’lar</small></button><button onclick="showMyProfile()"><span>♙</span><small>Profil</small></button></nav>
+    </section>
+    <section id="myprofile-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Mening profilim</h2></div><div class="my-profile-card"><div class="profile-hero-photo" id="my-photo">◎</div><h2 id="my-name">Profil</h2><p id="my-details"></p><p id="my-bio"></p></div><button class="premium-button" onclick="openPremium()">◆ Premium imkoniyatlar</button><button class="wide-secondary" onclick="startEditProfile()">Profilni tahrirlash</button><button class="wide-danger" onclick="deleteProfileLocal()">Profilni o‘chirish</button></section>
+    <section id="settings-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Sozlamalar</h2></div><button class="setting-row" onclick="toggleTheme()"><span>Mavzu</span><span id="theme-label-2">Yorug‘　›</span></button><button class="setting-row" onclick="openHelp()"><span>Yordam</span><b>›</b></button><button class="setting-row" onclick="openOffer()"><span>Ommaviy oferta</span><b>›</b></button><button class="setting-row" onclick="inviteFriends()"><span>Do‘stlarni taklif qilish</span><b>›</b></button></section>
+    <section id="likes-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Like’lar</h2></div><div class="empty-state"><div>♥</div><h3>Hali hech kim like qilmadi</h3><p>Profilingizni batafsil to‘ldiring — ko‘proq kishi e’tiborini jalb qilasiz</p></div></section>
+    <section id="messages-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Xabarlar</h2></div><div class="empty-state"><div>◌</div><h3>Hali suhbatlar yo‘q</h3><p>O‘zaro like bo‘lsa, suhbat shu yerda chiqadi.</p></div></section>
+    <section id="premium-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Premium</h2></div><div class="premium-box"><h2>Ko‘proq imkoniyatlar</h2><p>Ko‘rinmas rejim, reklamasiz foydalanish va maxsus imkoniyatlar.</p><button class="premium-button" onclick="activateDemoPremium()">Premiumni faollashtirish</button></div></section>
+    <section id="help-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Yordam</h2></div><button class="faq-row">Profilimni qanday o‘chiraman?　›</button><button class="faq-row">Rasm yuklay olmayapman　›</button><button class="faq-row">Moslik bo‘lganda nima bo‘ladi?　›</button><p class="support">Savollar uchun: @USevgiSupport</p></section>
+    <section id="offer-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Ommaviy oferta</h2></div><p>Ushbu xizmatdan foydalanish orqali siz platforma qoidalariga va maxfiylik shartlariga rozilik bildirasiz.</p></section>
+    <!-- 5-qadam -->
+    <section id="success-screen" class="card hidden">
+      <h2>Profil yaratildi</h2>
+      <p>
+        Profilingiz muvaffaqiyatli saqlandi. Endi sizga mos insonlarni
+        topishingiz mumkin.
+      </p>
+
+      <div class="success">
+        Ma’lumotlar serverga yuborildi.
+      </div>
+      <button type="button" class="main-button" onclick="openDashboard()">Asosiy menyu</button>
+    </section>
+
+    <button
+      type="button"
+      id="continue-button"
+      class="main-button"
+      onclick="continueStep()"
+    >
+      Davom etish
+    </button>
+
+  </main>
+
+  <script>
+    const BACKEND_URL =
+      "https://tanishuv-mini-app1.onrender.com";
+
+    const telegram =
+      window.Telegram && window.Telegram.WebApp
+        ? window.Telegram.WebApp
+        : null;
+
+    // Mini App Telegram ichida ochilishi kerak.
+    // BACKEND_URL Render’dagi Flask backend manziliga teng bo‘lishi shart.
+
+    if (telegram) {
+      telegram.ready();
+      telegram.expand();
+    }
+
+    let step = "basic";
+    let gender = "";
+    let lookingFor = "";
+    let selectedInterests = [];
+    let profilePhoto = "";
+    let profiles = [];
+    let profileIndex = 0;
+    let vipActive = false;
+    let invisibleActive = false;
+
+    const interestList = [
+      "Musiqa",
+      "Sayohat",
+      "Oshpazlik",
+      "Fotografiya",
+      "Fitness",
+      "Tabiat",
+      "Shaxmat",
+      "Kofe",
+      "Kitob o‘qish",
+      "Raqs",
+      "Kino",
+      "San’at",
+      "Dasturlash",
+      "Suzish",
+      "Hayvonlar",
+      "Sport",
+      "O‘yinlar",
+      "Yoga",
+      "Futbol",
+      "Velosiped"
+    ];
+
+    const interestBox =
+      document.getElementById("interests");
+
+    interestList.forEach(function(item) {
+      const button = document.createElement("button");
+
+      button.className = "interest";
+      button.textContent = item;
+
+      button.onclick = function() {
+        if (selectedInterests.includes(item)) {
+          selectedInterests =
+            selectedInterests.filter(function(value) {
+              return value !== item;
+            });
+
+          button.classList.remove("selected");
+        } else {
+          selectedInterests.push(item);
+          button.classList.add("selected");
+        }
+
+        document.getElementById("interest-count")
+          .textContent = selectedInterests.length;
+      };
+
+      interestBox.appendChild(button);
+    });
+
+    function chooseGender(value, button) {
+      gender = value;
+
+      document
+        .querySelectorAll("#basic-screen .choice")
+        .forEach(function(item) {
+          item.classList.remove("selected");
+        });
+
+      button.classList.add("selected");
+    }
+
+    function chooseLooking(value, button) {
+      lookingFor = value;
+
+      document
+        .querySelectorAll("#interests-screen .choice")
+        .forEach(function(item) {
+          item.classList.remove("selected");
+        });
+
+      button.classList.add("selected");
+    }
+
+    function updateCounter() {
+      document.getElementById("counter").textContent =
+        document.getElementById("bio").value.length;
+    }
+
+    function previewPhoto(event) {
+      const file = event.target.files[0];
+      const error = document.getElementById("photo-error");
+
+      error.textContent = "";
+
+      if (!file) {
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        error.textContent = "Faqat rasm faylini tanlang.";
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        error.textContent =
+          "Rasm hajmi 5 MB dan oshmasligi kerak.";
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = function(result) {
+        profilePhoto = result.target.result;
+
+        document.getElementById("photo-preview").innerHTML =
+          "<img src='" +
+          profilePhoto +
+          "' alt='Profil rasmi'>";
+      };
+
+      reader.readAsDataURL(file);
+    }
+
+    function showStep(name) {
+      const screens = [
+        "basic-screen",
+        "bio-screen",
+        "interests-screen",
+        "photo-screen",
+        "success-screen",
+        "dashboard-screen", "profiles-screen", "myprofile-screen", "settings-screen", "likes-screen", "messages-screen", "premium-screen", "help-screen", "offer-screen"
+      ];
+
+      screens.forEach(function(screen) {
+        document.getElementById(screen)
+          .classList.add("hidden");
+      });
+
+      document.getElementById(name + "-screen")
+        .classList.remove("hidden");
+
+      const continueButton = document.getElementById("continue-button");
+      if (["basic", "bio", "interests", "photo"].includes(name)) {
+        continueButton.classList.remove("hidden");
+      } else {
+        continueButton.classList.add("hidden");
+      }
+
+      step = name;
+    }
+
+    function getTelegramId() {
+      if (
+        telegram &&
+        telegram.initDataUnsafe &&
+        telegram.initDataUnsafe.user &&
+        telegram.initDataUnsafe.user.id
+      ) {
+        return telegram.initDataUnsafe.user.id;
+      }
+
+      return null;
+    }
+
+    async function sendProfileToServer() {
+      const basicInfo =
+        JSON.parse(localStorage.getItem("userBasicInfo") || "{}");
+
+      const bio =
+        localStorage.getItem("userBio") || "";
+
+      const telegramId = getTelegramId();
+
+      if (!telegramId) {
+        throw new Error(
+          "Telegram foydalanuvchi ID topilmadi. Mini App’ni Telegram ichida oching."
+        );
+      }
+
+      const response = await fetch(
+        BACKEND_URL + "/api/profile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            telegram_id: telegramId,
+            name: basicInfo.name,
+            age: basicInfo.age,
+            gender: basicInfo.gender,
+            bio: bio,
+            interests: selectedInterests,
+            looking_for: lookingFor,
+            photo: profilePhoto
+          })
+        }
+      );
+
+      const result = await response.json().catch(function() {
+        return { ok: false, error: "Server JSON javob bermadi." };
+      });
+
+      if (!response.ok || !result.ok) {
+        throw new Error(
+          result.error || "Profilni serverga saqlab bo‘lmadi."
+        );
+      }
+
+      return result;
+    }
+
+
+
+
+    function openDashboard() {
+      showStep("dashboard");
+      const savedInfo = JSON.parse(localStorage.getItem("userBasicInfo") || "{}");
+      document.getElementById("dashboard-name").textContent = savedInfo.name || "do‘stim";
+      document.getElementById("dashboard-age-gender").textContent = (savedInfo.age ? savedInfo.age + " yosh, " : "") + (savedInfo.gender || "Profilingiz");
+      const savedPhoto = localStorage.getItem("profilePhoto");
+      if (savedPhoto) document.getElementById("dashboard-photo").innerHTML = "<img src=\"" + savedPhoto + "\" alt=\"Profil rasmi\">";
+      document.getElementById("invisible-status").textContent = vipActive ? (invisibleActive ? "Yoqilgan" : "O‘chirilgan") : "VIP kerak";
+    }
+
+    function toggleInvisible() {
+      if (!vipActive) {
+        openPremium();
+        return;
+      }
+      invisibleActive = !invisibleActive;
+      document.getElementById("invisible-status").textContent = invisibleActive ? "Yoqilgan" : "O‘chirilgan";
+    }
+
+    function toggleVip() {
+      if (!vipActive) {
+        openPremium();
+        return;
+      }
+      vipActive = false;
+      invisibleActive = false;
+      document.getElementById("vip-status").textContent = "O‘chirilgan";
+      document.getElementById("invisible-status").textContent = "VIP kerak";
+    }
+
+    function openPremium() { showStep("premium"); }
+    function openHelp() { showStep("help"); }
+    function openOffer() { showStep("offer"); }
+    function showMyProfile() { showStep("myprofile"); const i=JSON.parse(localStorage.getItem("userBasicInfo")||"{}"); document.getElementById("my-name").textContent=i.name||"Profil"; document.getElementById("my-details").textContent=(i.age?i.age+" yosh, ":"")+(i.gender||""); document.getElementById("my-bio").textContent=localStorage.getItem("userBio")||"Profilingizni tahrirlang"; }
+    function showSearchSettings() { alert("Qidiruv sozlamalari: yosh va qiziqishlar bo‘yicha mos profillar tanlanadi."); }
+    function showMessages() { showStep("messages"); }
+    function showLikes() { showStep("likes"); }
+    function openSettings() { showStep("settings"); }
+    function activateDemoPremium(){ vipActive=true; openDashboard(); }
+    function toggleAdFree(){ if(!vipActive){openPremium();return;} alert("Reklamasiz rejim yoqildi."); }
+    function toggleTheme(){ document.body.classList.toggle("dark-mode"); const t=document.body.classList.contains("dark-mode")?"Qorong‘u":"Yorug‘"; document.querySelectorAll("#theme-label,#theme-label-2").forEach(x=>x.textContent=t+"　›"); }
+    function startEditProfile(){ showStep("basic"); }
+    function deleteProfileLocal(){ if(confirm("Profilni o‘chirishni xohlaysizmi?")){localStorage.clear();location.reload();} }
+    async function checkExistingProfile() {
+      const telegramId = getTelegramId();
+      if (!telegramId) return;
+
+      try {
+        const response = await fetch(
+          BACKEND_URL + "/api/profile?telegram_id=" + encodeURIComponent(telegramId)
+        );
+        const result = await response.json();
+        if (response.ok && result.ok && result.exists) {
+          const profile = result.profile;
+          localStorage.setItem("userBasicInfo", JSON.stringify({
+            name: profile.name,
+            age: profile.age,
+            gender: profile.gender,
+            offerAccepted: true
+          }));
+          localStorage.setItem("userBio", profile.bio || "");
+          openDashboard();
+        }
+      } catch (error) {
+        console.log("Profilni avtomatik tekshirishda xatolik:", error);
+      }
+    }
+
+    async function openProfiles() {
+      showStep("profiles");
+      const error = document.getElementById("profiles-error");
+      error.textContent = "";
+      document.getElementById("profile-card").textContent = "Yuklanmoqda...";
+      const telegramId = getTelegramId();
+      if (!telegramId) {
+        error.textContent = "Telegram ID topilmadi. Bot ichidan oching.";
+        return;
+      }
+      try {
+        const response = await fetch(BACKEND_URL + "/api/profiles?telegram_id=" + encodeURIComponent(telegramId));
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || "Profillarni olib bo‘lmadi");
+        profiles = result.profiles || [];
+        profileIndex = 0;
+        renderProfile();
+      } catch (error) {
+        document.getElementById("profile-card").textContent = "";
+        document.getElementById("profiles-error").textContent = error.message;
+      }
+    }
+
+    function renderProfile() {
+      const card = document.getElementById("profile-card");
+      if (!profiles.length || profileIndex >= profiles.length) {
+        card.innerHTML = "<p>Hozircha boshqa profil topilmadi.</p>";
+        return;
+      }
+      const profile = profiles[profileIndex];
+      card.innerHTML = "<h2>" + escapeHtml(profile.name) + ", " + profile.age + " yosh</h2>" +
+        "<p>" + escapeHtml(profile.gender) + "</p><p>" + escapeHtml(profile.bio) + "</p>";
+    }
+
+    function escapeHtml(value) {
+      return String(value || "").replace(/[&<>'"]/g, function(character) {
+        return {"&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;"}[character];
+      });
+    }
+
+    async function profileAction(action) {
+      if (!profiles[profileIndex]) return;
+      const fromId = getTelegramId();
+      const toId = profiles[profileIndex].telegram_id;
+      try {
+        const response = await fetch(BACKEND_URL + "/api/like", {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({from_id: fromId, to_id: toId, action: action})
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) throw new Error(result.error || "Amal bajarilmadi");
+        if (result.match) alert("Tabriklaymiz! O‘zaro Like bo‘ldi.");
+        profileIndex += 1;
+        renderProfile();
+      } catch (error) {
+        document.getElementById("profiles-error").textContent = error.message;
+      }
+    }
+
+    async function continueStep() {
+      const button =
+        document.getElementById("continue-button");
+
+      if (step === "basic") {
+        const name =
+          document.getElementById("name").value.trim();
+
+        const age =
+          Number(document.getElementById("age").value);
+
+        const consent =
+          document.getElementById("consent").checked;
+
+        const error =
+          document.getElementById("basic-error");
+
+        error.textContent = "";
+
+        if (!name) {
+          error.textContent = "Ismingizni kiriting.";
+          return;
+        }
+
+        if (!age || age < 18 || age > 100) {
+          error.textContent =
+            "Yosh 18 dan 100 gacha bo‘lishi kerak.";
+          return;
+        }
+
+        if (!gender) {
+          error.textContent = "Jinsingizni tanlang.";
+          return;
+        }
+
+        if (!consent) {
+          error.textContent =
+            "Oferta shartlariga rozilik bering.";
+          return;
+        }
+
+        localStorage.setItem(
+          "userBasicInfo",
+          JSON.stringify({
+            name: name,
+            age: age,
+            gender: gender,
+            offerAccepted: true
+          })
+        );
+
+        showStep("bio");
+        return;
+      }
+
+      if (step === "bio") {
+        const bio =
+          document.getElementById("bio").value.trim();
+
+        const error =
+          document.getElementById("bio-error");
+
+        error.textContent = "";
+
+        if (bio.length < 20) {
+          error.textContent =
+            "Kamida 20 ta belgi yozing.";
+          return;
+        }
+
+        localStorage.setItem("userBio", bio);
+        showStep("interests");
+        return;
+      }
+
+      if (step === "interests") {
+        const error =
+          document.getElementById("interest-error");
+
+        error.textContent = "";
+
+        if (selectedInterests.length < 3) {
+          error.textContent =
+            "Kamida 3 ta qiziqish tanlang.";
+          return;
+        }
+
+        if (!lookingFor) {
+          error.textContent =
+            "Kimni qidirayotganingizni tanlang.";
+          return;
+        }
+
+        localStorage.setItem(
+          "userInterests",
+          JSON.stringify(selectedInterests)
+        );
+
+        localStorage.setItem(
+          "lookingFor",
+          lookingFor
+        );
+
+        showStep("photo");
+        return;
+      }
+
+      if (step === "photo") {
+        const error =
+          document.getElementById("photo-error");
+
+        error.textContent = "";
+
+        if (!profilePhoto) {
+          error.textContent =
+            "Profil rasmini tanlang.";
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Saqlanmoqda...";
+
+        localStorage.setItem(
+          "profilePhoto",
+          profilePhoto
+        );
+
+        try {
+          await sendProfileToServer();
+
+          showStep("success");
+          button.classList.add("hidden");
+
+          if (telegram && telegram.MainButton) {
+            telegram.MainButton.hide();
+          }
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = "Davom etish";
+          document.getElementById("photo-error")
+            .textContent = error.message;
+        }
+      }
+    }
+
+    checkExistingProfile();
+  </script>
+</body>
+</html>
