@@ -319,6 +319,8 @@
     .bottom-nav { display: flex; justify-content: space-around; margin-top: 18px; padding: 12px 4px; border-radius: 16px; background: #fff; box-shadow: 0 4px 16px rgba(90,60,130,.08); }
     .bottom-nav button { border: 0; background: transparent; font-size: 22px; }
     .vip-badge { color: #934de8; font-weight: bold; }
+
+    .loading-screen{min-height:70vh;display:grid;place-items:center;align-content:center;text-align:center;background:#f4f2fa;color:#26212e}.loading-logo{width:70px;height:70px;border-radius:24px;background:#914de4;color:#fff;font-size:44px;display:grid;place-items:center;margin:auto}.loading-screen h2{margin:14px 0 4px}.loading-screen p{color:#8c8495}.language-choice{width:100%;padding:17px 16px;margin:6px 0;border:0;border-radius:16px;background:#fff;color:#282330;text-align:left;font-size:16px;display:flex;justify-content:space-between}.range-row{display:flex;align-items:center;gap:10px}.range-row input{width:100%}.dark-mode body,.dark-mode{background:#12101a;color:#f5f1fb}.dark-mode .dashboard-screen,.dark-mode .card,.dark-mode .inner-screen,.dark-mode .loading-screen{background:#1b1825;color:#f5f1fb}.dark-mode .professional-menu,.dark-mode .profile-hero,.dark-mode .my-profile-card,.dark-mode .premium-box,.dark-mode .language-choice{background:#282330;color:#f5f1fb}.dark-mode .setting-row{color:#f5f1fb}.dark-mode .bottom-nav{background:#282330}.dark-mode input{background:#282330;color:#fff;border-color:#463b55}.dark-mode .loading-screen p{color:#aaa3b5}
   </style>
 </head>
 
@@ -331,7 +333,8 @@
     </div>
 
     <!-- 1-qadam -->
-    <section id="basic-screen" class="card">
+    <section id="loading-screen" class="loading-screen"><div class="loading-logo">♡</div><h2>Malina</h2><p>Yuklanmoqda...</p></section>
+    <section id="basic-screen" class="card hidden">
       <h1>Ma’lumotlaringiz</h1>
       <p>Ismingiz, yoshingiz va jinsingizni kiriting</p>
 
@@ -460,7 +463,7 @@
         <button class="setting-row" onclick="showSearchSettings()"><span class="setting-left"><i>☷</i><span>Qidiruv sozlamalari</span></span><b>›</b></button>
         <button class="setting-row" onclick="toggleInvisible()"><span class="setting-left"><i>◉</i><span>Ko‘rinmas rejim</span></span><small id="invisible-status">VIP kerak</small><span class="switch-off" id="invisible-switch"></span></button>
         <button class="setting-row" onclick="toggleAdFree()"><span class="setting-left"><i>✧</i><span>Reklamasiz</span></span><small>VIP</small><span class="switch-off" id="adfree-switch"></span></button>
-        <button class="setting-row" onclick="openSettings()"><span class="setting-left"><i>◎</i><span>Til</span></span><span>O‘zbekcha　›</span></button>
+        <button class="setting-row" onclick="openLanguage()"><span class="setting-left"><i>◎</i><span>Til</span></span><span id="language-value">O‘zbekcha　›</span></button>
         <button class="setting-row" onclick="toggleTheme()"><span class="setting-left"><i>☼</i><span>Mavzu</span></span><span id="theme-label">Yorug‘　›</span></button>
         <button class="setting-row" onclick="openHelp()"><span class="setting-left"><i>➤</i><span>Yordam</span></span><b>›</b></button>
         <button class="setting-row" onclick="openOffer()"><span class="setting-left"><i>▤</i><span>Ommaviy oferta</span></span><b>›</b></button>
@@ -475,7 +478,7 @@
     </section>
     <!-- Qidiruv: yangi profillar shu bo‘lim ichida -->
     <section id="profiles-screen" class="profiles-screen card hidden">
-      <div class="search-head"><div><div class="eyebrow">TANISHUV OLAMI</div><h2>Qidiruv</h2></div><button class="filter-button" onclick="showSearchSettings()">☷</button></div>
+      <div class="search-head"><div><div class="eyebrow">MALINA</div><h2>Qidiruv</h2></div><button class="filter-button" onclick="showSearchSettings()">☷</button></div>
       <div class="swipe-card" id="profile-card">Yuklanmoqda...</div>
       <div class="search-actions"><button class="action-no" onclick="profileAction('dislike')">×</button><button class="action-yes" onclick="profileAction('like')">♥</button><button class="action-chat" onclick="openPremium()">◌</button></div>
       <div id="profiles-error" class="error"></div>
@@ -487,7 +490,9 @@
     <section id="messages-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Xabarlar</h2></div><div class="empty-state"><div>◌</div><h3>Hali suhbatlar yo‘q</h3><p>O‘zaro like bo‘lsa, suhbat shu yerda chiqadi.</p></div></section>
     <section id="premium-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Premium</h2></div><div class="premium-box"><h2>Ko‘proq imkoniyatlar</h2><p>Ko‘rinmas rejim, reklamasiz foydalanish va maxsus imkoniyatlar.</p><button class="premium-button" onclick="activateDemoPremium()">Premiumni faollashtirish</button></div></section>
     <section id="help-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Yordam</h2></div><button class="faq-row">Profilimni qanday o‘chiraman?　›</button><button class="faq-row">Rasm yuklay olmayapman　›</button><button class="faq-row">Moslik bo‘lganda nima bo‘ladi?　›</button><p class="support">Savollar uchun: @USevgiSupport</p></section>
-    <section id="offer-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Ommaviy oferta</h2></div><p>Ushbu xizmatdan foydalanish orqali siz platforma qoidalariga va maxfiylik shartlariga rozilik bildirasiz.</p></section>
+    <section id="offer-screen", "language-screen", "search-settings-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Ommaviy oferta</h2></div><p>Ushbu xizmatdan foydalanish orqali siz platforma qoidalariga va maxfiylik shartlariga rozilik bildirasiz.</p></section>
+    <section id="language-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Til</h2></div><button class="language-choice" onclick="setLanguage('uz')">🇺🇿 O‘zbekcha <b>✓</b></button><button class="language-choice" onclick="setLanguage('ru')">🇷🇺 Русский</button><button class="language-choice" onclick="setLanguage('en')">🇬🇧 English</button></section>
+    <section id="search-settings-screen" class="inner-screen card hidden"><div class="screen-head"><button onclick="openDashboard()">‹</button><h2>Qidiruv sozlamalari</h2></div><label>Yosh oralig‘i</label><div class="range-row"><input id="min-age" type="number" min="18" max="80" value="18"><span>—</span><input id="max-age" type="number" min="18" max="80" value="60"></div><label>Kimni qidiryapsiz?</label><button class="language-choice" onclick="saveSearchSettings()">Saqlash <b>✓</b></button><div id="search-settings-message" class="success"></div></section>
     <!-- 5-qadam -->
     <section id="success-screen" class="card hidden">
       <h2>Profil yaratildi</h2>
@@ -658,6 +663,7 @@
 
     function showStep(name) {
       const screens = [
+        "loading-screen",
         "basic-screen",
         "bio-screen",
         "interests-screen",
@@ -778,22 +784,31 @@
       document.getElementById("invisible-status").textContent = "VIP kerak";
     }
 
+    function inviteFriends(){
+      const url=encodeURIComponent("https://t.me/club_Malina_bot");
+      const text=encodeURIComponent("Malina tanishuv botiga qo‘shiling!");
+      const share="https://t.me/share/url?url="+url+"&text="+text;
+      if(telegram && telegram.openTelegramLink) telegram.openTelegramLink(share); else window.open(share,"_blank");
+    }
     function openPremium() { showStep("premium"); }
     function openHelp() { showStep("help"); }
     function openOffer() { showStep("offer"); }
     function showMyProfile() { showStep("myprofile"); const i=JSON.parse(localStorage.getItem("userBasicInfo")||"{}"); document.getElementById("my-name").textContent=i.name||"Profil"; document.getElementById("my-details").textContent=(i.age?i.age+" yosh, ":"")+(i.gender||""); document.getElementById("my-bio").textContent=localStorage.getItem("userBio")||"Profilingizni tahrirlang"; }
-    function showSearchSettings() { alert("Qidiruv sozlamalari: yosh va qiziqishlar bo‘yicha mos profillar tanlanadi."); }
+    function showSearchSettings() { showStep("search-settings"); }
+    function saveSearchSettings(){ localStorage.setItem("searchSettings", JSON.stringify({min:document.getElementById("min-age").value,max:document.getElementById("max-age").value})); document.getElementById("search-settings-message").textContent="Qidiruv sozlamalari saqlandi."; }
+    function openLanguage(){ showStep("language"); }
+    function setLanguage(lang){ const names={uz:"O‘zbekcha",ru:"Русский",en:"English"}; localStorage.setItem("language",lang); document.getElementById("language-value").textContent=names[lang]+"　›"; openDashboard(); }
     function showMessages() { showStep("messages"); }
     function showLikes() { showStep("likes"); }
     function openSettings() { showStep("settings"); }
     function activateDemoPremium(){ vipActive=true; openDashboard(); }
     function toggleAdFree(){ if(!vipActive){openPremium();return;} alert("Reklamasiz rejim yoqildi."); }
-    function toggleTheme(){ document.body.classList.toggle("dark-mode"); const t=document.body.classList.contains("dark-mode")?"Qorong‘u":"Yorug‘"; document.querySelectorAll("#theme-label,#theme-label-2").forEach(x=>x.textContent=t+"　›"); }
+    function toggleTheme(){ const dark=!document.body.classList.contains("dark-mode"); document.body.classList.toggle("dark-mode",dark); localStorage.setItem("theme",dark?"dark":"light"); const t=dark?"Qorong‘u":"Yorug‘"; document.querySelectorAll("#theme-label,#theme-label-2").forEach(x=>x.textContent=t+"　›"); }
     function startEditProfile(){ showStep("basic"); }
     function deleteProfileLocal(){ if(confirm("Profilni o‘chirishni xohlaysizmi?")){localStorage.clear();location.reload();} }
     async function checkExistingProfile() {
       const telegramId = getTelegramId();
-      if (!telegramId) return;
+      if (!telegramId) { showStep("basic"); return; }
 
       try {
         const response = await fetch(
@@ -810,9 +825,12 @@
           }));
           localStorage.setItem("userBio", profile.bio || "");
           openDashboard();
+        } else {
+          showStep("basic");
         }
       } catch (error) {
         console.log("Profilni avtomatik tekshirishda xatolik:", error);
+        showStep("basic");
       }
     }
 
@@ -1021,6 +1039,8 @@
       }
     }
 
+    if (localStorage.getItem("theme")==="dark") document.body.classList.add("dark-mode");
+    const savedLanguage=localStorage.getItem("language"); if(savedLanguage){const names={uz:"O‘zbekcha",ru:"Русский",en:"English"}; const lv=document.getElementById("language-value"); if(lv) lv.textContent=names[savedLanguage]+"　›";}
     checkExistingProfile();
   </script>
 </body>
